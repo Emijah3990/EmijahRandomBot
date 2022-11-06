@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import telebot
-
+import GetRandomNumber as grn
 API_TOKEN = '5609895910:AAGgizUnGZayS13VMfvuwpWfmt8HE2QqN0k'
 
 bot = telebot.TeleBot(API_TOKEN)
@@ -29,6 +29,14 @@ def send_message(message):
     '''
     bot.send_message(message.chat.id, help_message, parse_mode='html')
 
+@bot.message_handler(commands=['random_number_100'])
+def get_random_number_100(message):
+    random_number = grn.random_100()
+    bot.send_message(message.chat.id, random_number)
 
+@bot.message_handler(commands=['random_number_1000'])
+def get_random_number_1000(message):
+    random_number = grn.random_1000()
+    bot.send_message(message.chat.id, random_number)
 
 bot.infinity_polling()
