@@ -2,6 +2,8 @@
 
 import telebot
 import GetRandomNumber as grn
+from pyTelegramBotAPI.telebot import types
+
 API_TOKEN = '5609895910:AAGgizUnGZayS13VMfvuwpWfmt8HE2QqN0k'
 
 bot = telebot.TeleBot(API_TOKEN)
@@ -27,16 +29,30 @@ def send_message(message):
     /random_number_1000 to get number from 1 to 1000
     /random_number to get random number in your range
     '''
-    bot.send_message(message.chat.id, help_message, parse_mode='html')
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    itembtn1 = types.KeyboardButton('random_number_100')
+    itembtn2 = types.KeyboardButton('random_number_1000')
+    markup.add(itembtn1, itembtn2)
+
+    bot.send_message(message.chat.id, help_message, reply_markup=markup)
+
+@bot.message_handler()
+def get_random_number(message):
+    random_number_100 = grn.random_100()
+    random_number_1000 = grn.random_1000()
+    if message.text == 'random_number_100':
+       bot.send_message(message.chat.id, random_number_100)
+    elif message.text == 'random_number_1000':
+        bot.send_message(message.chat.id, random_number_1000)
 
 @bot.message_handler(commands=['random_number_100'])
 def get_random_number_100(message):
     random_number = grn.random_100()
     bot.send_message(message.chat.id, random_number)
-
 @bot.message_handler(commands=['random_number_1000'])
 def get_random_number_1000(message):
     random_number = grn.random_1000()
     bot.send_message(message.chat.id, random_number)
+
 
 bot.infinity_polling()
